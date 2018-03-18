@@ -14,6 +14,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 
+/*
+    NOTE
+    This app uses a singleton "Store" to share data between activities instead of intents.
+ */
+
+
 
 public class A1 extends AppCompatActivity {
 
@@ -22,9 +28,16 @@ public class A1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a1);
 
+        setup();
+    }
+
+    private void setup() {
+        // Add data and event listeners to widgets.
         addItemsToSpinner();
         addListenerOnButton();
         addListenerOnSpinner();
+
+        // Get preferences from cache.
         getUserPreferences();
     }
 
@@ -32,17 +45,16 @@ public class A1 extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.L1);
         List<String> list = new ArrayList<String>();
 
-        for(int i=1; i<100; ++i){
+        // Add some values to adapter.
+        for(int i = 1; i < 20; ++i){
             list.add("Item " + i);
         }
 
-        // copy pasta
-        // http://www.mkyong.com/android/android-spinner-drop-down-list-example/
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        // Add adapter to list.
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
-
     }
 
     private void addListenerOnButton() {
@@ -50,8 +62,11 @@ public class A1 extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Store store = Store.getInstance();
+
+                // Adds the value from text field (T1) to the store.
                 store.T1_value = ((TextView)findViewById(R.id.T1)).getText().toString();
 
+                // Starts new activity (A2).
                 startActivity(new Intent(A1.this, A2.class));
             }
         });
@@ -61,7 +76,9 @@ public class A1 extends AppCompatActivity {
         final Spinner spinner = findViewById(R.id.L1);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // One the following function are called when user updates spinner value.
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                // Caches selected spinner position.
                 SharedPreferences sharedPref = getSharedPreferences("preferences",0);
                 SharedPreferences.Editor prefEditor = sharedPref.edit();
                 prefEditor.putInt("userChoiceSpinner", position);

@@ -14,6 +14,10 @@ public class A3 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a3);
 
+        setup();
+    }
+
+    private void setup() {
         addListenerOnButton();
     }
 
@@ -22,8 +26,11 @@ public class A3 extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Store store = Store.getInstance();
+                // Update store.
                 store.T4_value = ((TextView)findViewById(R.id.T4)).getText().toString();
 
+
+                // Starts new activity (A2).
                 startActivity(new Intent(A3.this, A2.class));
             }
         });

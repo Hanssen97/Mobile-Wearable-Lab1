@@ -9,19 +9,24 @@ import android.widget.TextView;
 
 public class A2 extends AppCompatActivity {
 
+    Store store = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a2);
 
-        // Global Store
-        Store store = Store.getInstance();
+        setup();
+    }
 
+    private void setup() {
+        store = Store.getInstance();
 
         TextView T2 = findViewById(R.id.T2);
         TextView T3 = findViewById(R.id.T3);
 
-
+        // I find it unnecessary to drag hardcoded text in to string resource.
         T2.setText( "Hello " + String.valueOf(store.T1_value) );
         T3.setText( "From A3: " + String.valueOf(store.T4_value) );
 
@@ -32,10 +37,11 @@ public class A2 extends AppCompatActivity {
         Button button = findViewById(R.id.B2);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Store store = Store.getInstance();
+                // Update store values.
                 store.T2_value = ((TextView)findViewById(R.id.T2)).getText().toString();
                 store.T3_value = ((TextView)findViewById(R.id.T3)).getText().toString();
 
+                // Starts new activity (A3).
                 startActivity(new Intent(A2.this, A3.class));
             }
         });
@@ -43,6 +49,7 @@ public class A2 extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // Since I am using a Store object I force activity (A1) when back button is pressed.
         startActivity(new Intent(A2.this, A1.class));
     }
 }
